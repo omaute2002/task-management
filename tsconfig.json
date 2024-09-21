@@ -19,6 +19,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "noUncheckedIndexedAccess": false,  
+    "noImplicitReturns": false ,
     "incremental": true,
     "baseUrl": ".",  // Set the base URL to the project root
     "paths": {
