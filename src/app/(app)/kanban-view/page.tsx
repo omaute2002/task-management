@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 "use client";
 import React, { useEffect, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
@@ -22,7 +22,7 @@ const initialTasks = {
 
 
 // Draggable Task Component
-const Task = ({ task, column, moveTask }) => {
+const Task = ({ task, column }) => {
   const [, ref] = useDrag({
     type: ItemType.TASK,
     item: { id: task._id, column },

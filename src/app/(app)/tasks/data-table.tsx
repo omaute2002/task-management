@@ -20,7 +20,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
+
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -90,7 +90,7 @@ export function DataTable<TData, TValue>({
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { sessionInfo } = useSession();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("To-Do");
