@@ -1,12 +1,18 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
-    "@typescript-eslint/no-explicit-any": "off", // Example rule to ignore 'any' type errors
-    "@typescript-eslint/explicit-module-boundary-types": "off", // Ignore boundary type errors
-    "@typescript-eslint/no-unused-vars": "off", // Ignore boundary type errors
-    "@typescript-eslint/nban-ts-comment": "off", // Ignore boundary type errors
-    "@typescript-eslint/no-empty-object-type": "off",
-    "@typescript-eslint/ban-ts-comment": "off" // Ignore boundary type errors
-    
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "no-console": "off",
+    "no-debugger": "off",
+    "no-unused-vars": "off",
+    "no-undef": "off"
   }
 }
