@@ -4,7 +4,14 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const SECRET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 const EXPIRES_IN = "7d";
 
-export const generateToken = (user: any) => {
+// Define a user interface for stricter type safety
+interface User {
+  _id: string;
+  email: string;
+  username: string;
+}
+
+export const generateToken = (user: User) => {
   const userPayload = jwt.sign(
     { id: user._id, email: user.email, username: user.username },
     SECRET_KEY,
@@ -17,7 +24,7 @@ export const generateToken = (user: any) => {
 };
 
 // Verify a jwt token
-export const verifyToken = async (token: string) => {
+export const verifyToken = async (token: string): Promise<JwtPayload | null> => {
   try {
     return await jwt.verify(token, SECRET_KEY) as JwtPayload;
   } catch (error) {
@@ -25,18 +32,18 @@ export const verifyToken = async (token: string) => {
   }
 };
 
-export const decodeToken = (token: string) => {
+export const decodeToken = (token: string): { id: string, email: string, username: string } | null => {
   try {
     const decoded = jwt.decode(token) as JwtPayload;
     return decoded
-      ? { id: decoded.id, email: decoded.email, username: decoded.username }
+      ? { id: decoded.id as string, email: decoded.email as string, username: decoded.username as string }
       : null;
   } catch (error) {
     return null;
   }
 };
 
-export const validateJWT = async (token: string) => {
+export const validateJWT = async (token: string): Promise<JwtPayload | false> => {
   try {
     console.log("Token received:", token);
     console.log("Secret key used:", SECRET_KEY);

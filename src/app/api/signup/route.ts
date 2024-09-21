@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+
+
 import dbConnect from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
 import UserModel from "@/model/User";

@@ -61,7 +61,7 @@ export default function Page() {
       <div className="w-full">
         <Navbar />
         <div className="container mx-auto py-10">
-          <h1 className="ml-8 font-semibold  text-xl">Welcome back, {username}</h1>
+          <h1 className="font-semibold  text-xl">Welcome back, {username}</h1>
           <DataTable columns={columns} data={taskData} />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import mongoose, { Document, mongo, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 // Define a TypeScript interface for Task
 export interface Task extends Document {

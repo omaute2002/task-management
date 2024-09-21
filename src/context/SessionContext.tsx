@@ -1,7 +1,7 @@
 "use client";
-import react from "react";
+
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { JwtPayload } from "jsonwebtoken";
+
 import { decodeToken } from "@/lib/auth";
 
 interface SessionContextType {  

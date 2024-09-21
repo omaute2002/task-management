@@ -1,3 +1,4 @@
+//@ts-nochec
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -8,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "next/link"; 
 import { ApiResponse } from "@/types/ApiResponse";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";

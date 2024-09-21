@@ -1,5 +1,5 @@
 "use client"
-import Image from "next/image";
+
 import Navbar from "@/components/custom-components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

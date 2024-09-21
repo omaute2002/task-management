@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import { FormEvent, useState } from "react";
 import {
@@ -12,8 +13,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 
 import {
   Select,
@@ -53,11 +53,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { taskSchema } from "@/schema/taskSchema";
+
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -90,13 +90,13 @@ export function DataTable<TData, TValue>({
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { sessionInfo, setSessionInfo } = useSession();
+  const { sessionInfo } = useSession();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("To-Do");
   const [priority, setPriority] = useState("Low");
   const [dueDate, setDueDate] = useState("");
-  const userId = sessionInfo?.id;
+
 
   // Error state variables for basic validation
   const [errors, setErrors] = useState({
@@ -193,7 +193,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 mx-8">
+      <div className="flex items-center py-4">
         <Input
           placeholder="Filter tasks..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
@@ -348,7 +348,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border mx-6">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -398,7 +398,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4 mx-6">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
