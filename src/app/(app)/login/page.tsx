@@ -37,7 +37,7 @@ export default function Login() {
         const decodedUser = decodeToken(token);
         if(decodedUser){
             setSessionInfo(decodedUser); // saving user details in the Session.
-            localStorage.setItem("authToken", token);
+          localStorage.setItem("authToken", token);
           }
       }
       toast({
@@ -48,7 +48,7 @@ export default function Login() {
     } catch (error) {
       console.error("Error in login", error);
       const axiosError = error as AxiosError<ApiResponse>;
-      let errorMessage = axiosError.response?.data.message;
+      const errorMessage = axiosError.response?.data.message;
       toast({
         title: "Unsuccessful",
         description: errorMessage,

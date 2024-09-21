@@ -5,7 +5,8 @@
     "@typescript-eslint/explicit-module-boundary-types": "off", // Ignore boundary type errors
     "@typescript-eslint/no-unused-vars": "off", // Ignore boundary type errors
     "@typescript-eslint/nban-ts-comment": "off", // Ignore boundary type errors
-    "@typescript-eslint/no-empty-object-type": "off" // Ignore boundary type errors
+    "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/ban-ts-comment": "off" // Ignore boundary type errors
     
   }
 }

@@ -175,65 +175,69 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-    const router = useRouter();
-      const task = row.original;
-      const token = localStorage.getItem("authToken");
-    
-      const { toast } = useToast();
-      if (!token) {
-        toast({
-          title: "Authorization Failed",
-          description: "Login again",
-          variant: "destructive",
-        });
-      }
-      const handleDelete = async () => {
-        try {
-          const response = await axios.delete(`/api/delete-task/${task._id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.data.success) {
-            toast({
-              title: "Task deleted! ",
-            });
-            location.reload();
-          }
-        } catch (error) {
-          console.error("Error while deleting the task", error);
+      const Cell = () => {
+        const router = useRouter();
+        const task = row.original;
+        const token = localStorage.getItem("authToken");
+        const { toast } = useToast();
+  
+        if (!token) {
           toast({
-            title: "Failed to delete",
+            title: "Authorization Failed",
+            description: "Login again",
             variant: "destructive",
           });
         }
+  
+        const handleDelete = async () => {
+          try {
+            const response = await axios.delete(`/api/delete-task/${task._id}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            if (response.data.success) {
+              toast({
+                title: "Task deleted!",
+              });
+              location.reload();
+            }
+          } catch (error) {
+            console.error("Error while deleting the task", error);
+            toast({
+              title: "Failed to delete",
+              variant: "destructive",
+            });
+          }
+        };
+  
+        const handleEdit = () => {
+          router.push(`/edit-task/${task._id}`); // Redirect to the edit page
+        };
+  
+        return (
+          <>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        );
       };
-
-      
-    const handleEdit = () => {
-        router.push(`/edit-task/${task._id}`); // Redirect to the edit page
-      };
-
-
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-        </>
-      );
+  
+      // Return the component directly here
+      return <Cell />;
     },
-  },
+  }
+  
 ];
