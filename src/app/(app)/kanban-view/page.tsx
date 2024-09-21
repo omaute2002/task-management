@@ -23,14 +23,14 @@ const initialTasks = {
 
 // Draggable Task Component
 const Task = ({ task, column, moveTask }) => {
-  const [, ref] = useDrag({
+  const [, dragRef] = useDrag({
     type: ItemType.TASK,
     item: { id: task._id, column },
   });
 
   return (
     <div
-      ref={ref}
+    ref={dragRef as unknown as React.Ref<HTMLDivElement>} 
       className="bg-white p-4 mb-2 rounded-lg shadow hover:shadow-lg transition-all"
     >
       <h4 className="font-semibold text-lg">{task.title}</h4>
