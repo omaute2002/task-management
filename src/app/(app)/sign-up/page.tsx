@@ -39,7 +39,7 @@ export default function Signup() {
     } catch (error) {
       console.error("Error in signin", error);
       const axiosError = error as AxiosError<ApiResponse>;
-      let errorMessage = axiosError.response?.data.message;
+      const errorMessage = axiosError.response?.data.message;
       toast({
         title: "Unsuccessful",
         description: errorMessage,
