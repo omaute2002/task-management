@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signUpSchema } from "@/schema/signupSchema";
+import { signUpSchema } from "@/schema/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
