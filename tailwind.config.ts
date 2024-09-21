@@ -9,6 +9,13 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		screens: {
+			xs: '390px',
+			sm: '480px',
+			md: '768px',
+			lg: '976px',
+			xl: '1440px',
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -152,6 +153,17 @@ export default function Signup() {
               )}
             </Button>
           </form>
+          <div className="text-center mt-4">
+            <p>
+              Already a member?{" "}
+              <Link
+                href="/login"
+                className="text-blue-500 hover:text-blue-600"
+              >
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

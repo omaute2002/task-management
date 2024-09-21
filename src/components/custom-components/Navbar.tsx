@@ -31,14 +31,14 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     setSessionInfo(null);
-    router.push("/login");
+    router.push("/");
   };
   console.log(sessionInfo);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      router.replace("/login");
+      router.replace("/");
     } else {
       const isValid = validateJWT(token);
       if (!isValid) {

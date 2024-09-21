@@ -15,7 +15,6 @@ export const taskSchema = z.object({
     errorMap: () => ({ message: 'Invalid priority' }),
   }),
   dueDate: z.date().optional().nullable(),
-  createdBy: z.string().min(1, 'Created by is required'), // ObjectId of the user
   createdAt: z.date(),
   updatedAt: z.date(),
 });

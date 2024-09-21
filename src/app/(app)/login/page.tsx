@@ -44,7 +44,7 @@ export default function Login() {
         title: "Success",
         description: response.data.message,
       });
-      router.replace("/"); // Redirect to dashboard on successful login
+      router.replace("/tasks"); // Redirect to dashboard on successful login
     } catch (error) {
       console.error("Error in login", error);
       const axiosError = error as AxiosError<ApiResponse>;

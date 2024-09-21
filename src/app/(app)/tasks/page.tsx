@@ -4,6 +4,7 @@ import { Task, columns } from "./columns";
 import { DataTable } from "./data-table";
 import axios from "axios";
 import { useSession } from "@/context/SessionContext";
+import Navbar from "@/components/custom-components/Navbar";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Page() {
@@ -12,7 +13,7 @@ export default function Page() {
   const [taskData, setTaskData] = useState([]);
 
   const userId = sessionInfo?.id;
-
+  const username = sessionInfo?.username;
   async function getTaskData() {
     try {
       // Retrieve the token from localStorage
@@ -56,8 +57,14 @@ export default function Page() {
   }, [userId]); // Fetch tasks when userId is available
 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={taskData} />
-    </div>
+    <>
+      <div className="w-full">
+        <Navbar />
+        <div className="container mx-auto py-10">
+          <h1 className="ml-8 font-semibold  text-xl">Welcome back, {username}</h1>
+          <DataTable columns={columns} data={taskData} />
+        </div>
+      </div>
+    </>
   );
 }

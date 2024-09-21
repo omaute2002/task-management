@@ -5,25 +5,9 @@ import { verifyToken } from "@/lib/auth";
 import mongoose from "mongoose";
 import dbConnect from "@/lib/dbConnect";
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { taskId: string } }
-) {
-  const taskId = params.taskId;
-  console.log("taskid ", taskId);
-
-  if (!taskId) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Invalid taskid",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
+export async function PUT(request: NextRequest) {
   await dbConnect();
+  
   try {
     const authHeader = request.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -35,17 +19,40 @@ export async function PUT(
         { status: 401 }
       );
     }
+    
     const token = authHeader.split(" ")[1];
     const user = await verifyToken(token);
     if (!user) {
       return NextResponse.json(
         {
           success: false,
-          message: "Unauthorized to delete task.",
+          message: "Unauthorized to edit task.",
         },
         { status: 403 }
       );
     }
+
+    const { taskId, title, description, status, priority, dueDate } = await request.json();
+    
+    if (!taskId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid taskId",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    if (!title) {
+      return NextResponse.json({
+        success: false,
+        message: "Title is required",
+      });
+    }
+
     const task = await TaskModel.findById(taskId);
     if (!task) {
       return NextResponse.json(
@@ -57,33 +64,28 @@ export async function PUT(
       );
     }
 
-    const {title, description, status, priority, dueDate} = await request.json();
-
-    if(!title){
-        return NextResponse.json({
-            success:false,
-            message:"Title is required"
-        })
-    }
-    
     const updatedTaskObject = {
-        title, 
-        description,
-        status,
-        priority,
-        dueDate
-    }
-    await TaskModel.findByIdAndUpdate(taskId, updatedTaskObject, {new:true});
-    return NextResponse.json({
-        success:true,
-        message:"Task updated successfully"
-    }, {status:200})
+      title,
+      description,
+      status,
+      priority,
+      dueDate,
+    };
+
+    await TaskModel.findByIdAndUpdate(taskId, updatedTaskObject, { new: true });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Task updated successfully",
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error while editing the task", error);
     return NextResponse.json(
       {
         success: false,
-        message: "error while editing the task",
+        message: "Error while editing the task",
       },
       { status: 500 }
     );
