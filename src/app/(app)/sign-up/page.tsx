@@ -1,4 +1,4 @@
-//@ts-nochec
+
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
