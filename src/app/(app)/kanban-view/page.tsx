@@ -1,15 +1,16 @@
 "use client";
-import React, {useEffect, useState} from "react";
-import {DndProvider, useDrag, useDrop} from "react-dnd";
-import {HTML5Backend} from "react-dnd-html5-backend";
+import React, { useEffect, useState } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import axios from "axios";
-import {useRouter} from "next/navigation";
-import {Button} from "@/components/ui/button";
-import {useSession} from "@/context/SessionContext";
-import {useToast} from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/context/SessionContext";
+import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/custom-components/Navbar";
 
-const ItemType = {TASK: "task"};
+const ItemType = { TASK: "task" };
+
 interface TaskType {
   _id: string;
   title: string;
@@ -17,44 +18,46 @@ interface TaskType {
   status: string;
 }
 
-const initialTasks = {"To-Do": [], "In-Progress": [], "Completed": []};
+const initialTasks = { "To-Do": [], "In-Progress": [], "Completed": [] };
 
 // Draggable Task Component
-const Task: React.FC<{task: TaskType; column: string; moveTask: (id: string, column: string) => void}> = ({task, column, moveTask}) => {
-    const [, ref] = useDrag({
-      type: ItemType.TASK,
-      item: {id: task._id, column},
-    });
-  
-    return (
-      <div ref={ref} className="bg-white p-4 mb-2 rounded-lg shadow hover:shadow-lg transition-all">
-        <h4 className="font-semibold text-lg">{task.title}</h4>
-        <p className="text-gray-600">{task.description}</p>
-      </div>
-    );
-  };
-  
+const Task: React.FC<{ task: TaskType; column: string; moveTask: (id: string, column: string) => void }> = ({ task, column, moveTask }) => {
+  const [, dragRef] = useDrag({
+    type: ItemType.TASK,
+    item: { id: task._id, column },
+  });
+
+  return (
+    <div
+      ref={dragRef as React.Ref<HTMLDivElement>}
+      className="bg-white p-4 mb-2 rounded-lg shadow hover:shadow-lg transition-all"
+    >
+      <h4 className="font-semibold text-lg">{task.title}</h4>
+      <p className="text-gray-600">{task.description}</p>
+    </div>
+  );
+};
 
 // Droppable Column Component
-const Column: React.FC<{column: string; tasks: TaskType[]; moveTask: (id: string, column: string) => void}> = ({column, tasks, moveTask}) => {
-    const [, ref] = useDrop({
-      accept: ItemType.TASK,
-      drop: (item: {id: string}) => moveTask(item.id, column),
-    });
-  
-    return (
-      <div ref={ref} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
-        <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
-        {tasks.map((task) => (
-          <Task key={task._id} task={task} column={column} moveTask={moveTask} />
-        ))}
-      </div>
-    );
-  };
+const Column: React.FC<{ column: string; tasks: TaskType[]; moveTask: (id: string, column: string) => void }> = ({ column, tasks, moveTask }) => {
+  const [, dropRef] = useDrop({
+    accept: ItemType.TASK,
+    drop: (item: { id: string }) => moveTask(item.id, column),
+  });
+
+  return (
+    <div ref={dropRef} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
+      <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
+      {tasks.map((task) => (
+        <Task key={task._id} task={task} column={column} moveTask={moveTask} />
+      ))}
+    </div>
+  );
+};
 
 const KanbanBoard = () => {
-  const {toast} = useToast();
-  const {sessionInfo} = useSession();
+  const { toast } = useToast();
+  const { sessionInfo } = useSession();
   const userId = sessionInfo?.id;
   const username = sessionInfo?.username;
   const router = useRouter();
@@ -64,20 +67,20 @@ const KanbanBoard = () => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await axios.get(`/api/get-tasks/${userId}`, {
-        headers: {Authorization: `Bearer ${token}`},
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.data.success) {
-        const taskObj = {"To-Do": [], "In-Progress": [], "Completed": []};
+        const taskObj = { "To-Do": [], "In-Progress": [], "Completed": [] };
         response.data.tasks.forEach((task: TaskType) => {
           taskObj[task.status].push(task);
         });
         setTasks(taskObj);
-        toast({title: "Successfully fetched tasks"});
+        toast({ title: "Successfully fetched tasks" });
       }
     } catch (error) {
       console.error("Failed to fetch tasks", error);
-      toast({title: "Failed to load tasks", variant: "destructive"});
+      toast({ title: "Failed to load tasks", variant: "destructive" });
     }
   };
 
@@ -89,23 +92,23 @@ const KanbanBoard = () => {
     const task = Object.values(tasks).flat().find((t) => t._id === taskId);
 
     setTasks((prevTasks) => {
-      const updatedTasks = {...prevTasks};
+      const updatedTasks = { ...prevTasks };
       const sourceColumn = task?.status;
 
       if (sourceColumn) {
         updatedTasks[sourceColumn] = updatedTasks[sourceColumn].filter((t) => t._id !== taskId);
-        updatedTasks[destinationColumn] = [...updatedTasks[destinationColumn], {...task, status: destinationColumn}];
+        updatedTasks[destinationColumn] = [...updatedTasks[destinationColumn], { ...task, status: destinationColumn }];
       }
       return updatedTasks;
     });
 
     try {
       const token = localStorage.getItem("authToken");
-      await axios.put("/api/update-status", {id: taskId, status: destinationColumn}, {headers: {Authorization: `Bearer ${token}`}});
-      toast({title: "Status updated successfully"});
+      await axios.put("/api/update-status", { id: taskId, status: destinationColumn }, { headers: { Authorization: `Bearer ${token}` } });
+      toast({ title: "Status updated successfully" });
     } catch (error) {
       console.error("Failed to update task status", error);
-      toast({title: "Failed to update status", variant: "destructive"});
+      toast({ title: "Failed to update status", variant: "destructive" });
     }
   };
 
