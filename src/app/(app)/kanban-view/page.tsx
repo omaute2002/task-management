@@ -40,21 +40,27 @@ const Task = ({ task, column, moveTask }) => {
 };
 
 // Droppable Column Component
-const Column = ({ column, tasks, moveTask }) => {
-  const [, ref] = useDrop({
-    accept: ItemType.TASK,
-    drop: (item) => moveTask(item.id, column),
-  });
-
-  return (
-    <div ref={ref} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
-      <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
-      {tasks.map((task) => (
-        <Task key={task._id} task={task} column={column} moveTask={moveTask} />
-      ))}
-    </div>
-  );
-};
+interface DraggedTask {
+    id: string;  // Define the shape of the dragged task item
+    column: string;
+  }
+  
+  const Column = ({ column, tasks, moveTask }) => {
+    const [, ref] = useDrop({
+      accept: ItemType.TASK,
+      drop: (item: DraggedTask) => moveTask(item.id, column),  // Explicitly type the 'item'
+    });
+  
+    return (
+      <div ref={ref} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
+        <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
+        {tasks.map((task) => (
+          <Task key={task._id} task={task} column={column} moveTask={moveTask} />
+        ))}
+      </div>
+    );
+  };
+  
 
 const KanbanBoard = () => {
   const { toast } = useToast();
