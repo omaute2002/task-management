@@ -13,6 +13,7 @@
     "strictFunctionTypes": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
+    
     "noEmit": true,
     "jsx": "preserve",
     "module": "esnext",
@@ -23,6 +24,7 @@
     "noImplicitReturns": false ,
     "incremental": true,
     "baseUrl": ".",  // Set the base URL to the project root
+    
     "paths": {
       "@/*": ["src/*"], // Map the @ alias to the src folder
       "@/components/*": ["src/components/*"] // Map to the components folder

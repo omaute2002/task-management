@@ -12,6 +12,10 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "react/display-name": "off",
+
+    "react/no-unescaped-entities": "off", // Allow unescaped entities in JSX
+    "react/jsx-props-no-spreading": "off", // Allow prop spreading
+    "react/no-unknown-property": "off" ,// Allow unknown properties in JSX
     "no-console": "off",
     "no-debugger": "off",
     "no-unused-vars": "off",
