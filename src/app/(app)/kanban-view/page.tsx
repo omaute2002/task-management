@@ -13,13 +13,6 @@ import Navbar from "@/components/custom-components/Navbar";
 const ItemType = {
   TASK: "task",
 };
-interface TaskType {
-    _id: string;
-    title: string;
-    description: string;
-    status: string;
-  }
-  
 
 const initialTasks = {
   "To-Do": [],
@@ -29,40 +22,39 @@ const initialTasks = {
 
 
 // Draggable Task Component
-const Task: React.FC<{ task: TaskType; column: string; moveTask: (id: string, column: string) => void }> = ({ task, column, moveTask }) => {
-    const [, ref] = useDrag({
-      type: ItemType.TASK,
-      item: { id: task._id, column },
-    });
-  
-    return (
-      <div
-        ref={ref}
-        className="bg-white p-4 mb-2 rounded-lg shadow hover:shadow-lg transition-all"
-      >
-        <h4 className="font-semibold text-lg">{task.title}</h4>
-        <p className="text-gray-600">{task.description}</p>
-      </div>
-    );
-  };
-  
+const Task = ({ task, column, moveTask }) => {
+  const [, ref] = useDrag({
+    type: ItemType.TASK,
+    item: { id: task._id, column },
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="bg-white p-4 mb-2 rounded-lg shadow hover:shadow-lg transition-all"
+    >
+      <h4 className="font-semibold text-lg">{task.title}</h4>
+      <p className="text-gray-600">{task.description}</p>
+    </div>
+  );
+};
 
 // Droppable Column Component
-const Column: React.FC<{ column: string; tasks: TaskType[]; moveTask: (id: string, column: string) => void }> = ({ column, tasks, moveTask }) => {
-    const [, ref] = useDrop({
-      accept: ItemType.TASK,
-      drop: (item: { id: string }) => moveTask(item.id, column),
-    });
-  
-    return (
-      <div ref={ref} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
-        <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
-        {tasks.map((task) => (
-          <Task key={task._id} task={task} column={column} moveTask={moveTask} />
-        ))}
-      </div>
-    );
-  };
+const Column = ({ column, tasks, moveTask }) => {
+  const [, ref] = useDrop({
+    accept: ItemType.TASK,
+    drop: (item) => moveTask(item.id, column),
+  });
+
+  return (
+    <div ref={ref} className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md gap-4">
+      <h3 className="text-xl font-bold mb-2 text-center">{column}</h3>
+      {tasks.map((task) => (
+        <Task key={task._id} task={task} column={column} moveTask={moveTask} />
+      ))}
+    </div>
+  );
+};
 
 const KanbanBoard = () => {
   const { toast } = useToast();
