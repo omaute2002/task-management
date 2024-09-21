@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": false,  // Disables all strict type checking options
+    "strict": false,
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
@@ -19,6 +19,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "incremental": true
-  }
+    "incremental": true,
+    "baseUrl": ".",  // Set the base URL to the project root
+    "paths": {
+      "@/*": ["src/*"], // Map the @ alias to the src folder
+      "@/components/*": ["src/components/*"] // Map to the components folder
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
