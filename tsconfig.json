@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,23 +17,37 @@
     "strictFunctionTypes": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    
     "noEmit": true,
     "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noUncheckedIndexedAccess": false,  
-    "noImplicitReturns": false ,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitReturns": false,
     "incremental": true,
-    "baseUrl": ".",  // Set the base URL to the project root
-    
+    "baseUrl": ".", // Set the base URL to the project root
     "paths": {
-      "@/*": ["src/*"], // Map the @ alias to the src folder
-      "@/components/*": ["src/components/*"] // Map to the components folder
-    }
+      "@/*": [
+        "src/*"
+      ], // Map the @ alias to the src folder
+      "@/components/*": [
+        "src/components/*"
+      ] // Map to the components folder
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+, "src/app/api/create-task/route.js", "src/app/(app)/tasks/page.jsx", "src/app/(app)/tasks/data-table.jsx", "src/app/(app)/tasks/columns.jsx", "src/app/(app)/sign-up/page.jsx", "src/app/(app)/login/page.jsx", "src/app/(app)/kanban-view/page.jsx", "src/app/(app)/edit-task/[taskId]/page.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

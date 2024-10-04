@@ -27,7 +27,7 @@ export default function Signup() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post("/api/signup", data);
@@ -38,7 +38,7 @@ export default function Signup() {
       router.replace("/login");
     } catch (error) {
       console.error("Error in signin", error);
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error;
       const errorMessage = axiosError.response?.data.message;
       toast({
         title: "Unsuccessful",

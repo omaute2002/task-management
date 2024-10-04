@@ -1,12 +1,9 @@
-
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import axios, { AxiosError } from "axios";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
@@ -20,19 +17,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export type Task = {
-  id: string;
-  title: string;
-  description?: string;
-  status: "To-Do" | "In-Progress" | "Completed";
-  priority: "Low" | "Medium" | "High";
-  dueDate?: Date;
-  createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export const columns: ColumnDef<Task>[] = [
+// Define Task structure
+const columns = [
   {
     accessorKey: "title",
     header: "Title",
@@ -55,11 +41,10 @@ export const columns: ColumnDef<Task>[] = [
       );
     },
     sortingFn: (rowA, rowB) => {
-      const order = ["To-Do", "In-Progress", "Completed"]; // Define the custom order
+      const order = ["To-Do", "In-Progress", "Completed"];
       const statusA = rowA.getValue("status");
       const statusB = rowB.getValue("status");
 
-      // Compare the indices of status in the custom order array
       return order.indexOf(statusA) - order.indexOf(statusB);
     },
     cell: ({ row }) => {
@@ -79,11 +64,7 @@ export const columns: ColumnDef<Task>[] = [
       };
 
       return (
-        <Badge
-          className={`rounded-full text-xs font-semibold ${getStatusColor(
-            status
-          )}`}
-        >
+        <Badge className={`rounded-full text-xs font-semibold ${getStatusColor(status)}`}>
           {status}
         </Badge>
       );
@@ -117,11 +98,7 @@ export const columns: ColumnDef<Task>[] = [
         }
       };
       return (
-        <Badge
-          className={`rounded-full text-xs font-semibold ${getPriorityStatus(
-            priority
-          )}`}
-        >
+        <Badge className={`rounded-full text-xs font-semibold ${getPriorityStatus(priority)}`}>
           {priority}
         </Badge>
       );
@@ -142,9 +119,7 @@ export const columns: ColumnDef<Task>[] = [
     },
     cell: ({ row }) => {
       const dueDate = new Date(row.getValue("dueDate"));
-      const formattedDate = `${dueDate.getFullYear()}-${String(
-        dueDate.getDate()
-      ).padStart(2, "0")}-${String(dueDate.getMonth() + 1).padStart(2, "0")}`;
+      const formattedDate = `${dueDate.getFullYear()}-${String(dueDate.getDate()).padStart(2, "0")}-${String(dueDate.getMonth() + 1).padStart(2, "0")}`;
 
       return <span>{formattedDate}</span>;
     },
@@ -164,9 +139,7 @@ export const columns: ColumnDef<Task>[] = [
     },
     cell: ({ row }) => {
       const createdAt = new Date(row.getValue("createdAt"));
-      const formattedDate = `${createdAt.getFullYear()}-${String(
-        createdAt.getDate()
-      ).padStart(2, "0")}-${String(createdAt.getMonth() + 1).padStart(2, "0")}`;
+      const formattedDate = `${createdAt.getFullYear()}-${String(createdAt.getDate()).padStart(2, "0")}-${String(createdAt.getMonth() + 1).padStart(2, "0")}`;
       return <span>{formattedDate}</span>;
     },
     sortingFn: "datetime",
@@ -180,7 +153,7 @@ export const columns: ColumnDef<Task>[] = [
         const task = row.original;
         const token = localStorage.getItem("authToken");
         const { toast } = useToast();
-  
+
         if (!token) {
           toast({
             title: "Authorization Failed",
@@ -188,7 +161,7 @@ export const columns: ColumnDef<Task>[] = [
             variant: "destructive",
           });
         }
-  
+
         const handleDelete = async () => {
           try {
             const response = await axios.delete(`/api/delete-task/${task._id}`, {
@@ -210,11 +183,11 @@ export const columns: ColumnDef<Task>[] = [
             });
           }
         };
-  
+
         const handleEdit = () => {
-          router.push(`/edit-task/${task._id}`); // Redirect to the edit page
+          router.push(`/edit-task/${task._id}`);
         };
-  
+
         return (
           <>
             <DropdownMenu>
@@ -234,10 +207,10 @@ export const columns: ColumnDef<Task>[] = [
           </>
         );
       };
-  
-      // Return the component directly here
+
       return <Cell />;
     },
-  }
-  
+  },
 ];
+
+export default columns;

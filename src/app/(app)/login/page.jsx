@@ -28,7 +28,7 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post("/api/login", data);
@@ -47,7 +47,7 @@ export default function Login() {
       router.replace("/tasks"); // Redirect to dashboard on successful login
     } catch (error) {
       console.error("Error in login", error);
-      const axiosError = error as AxiosError<ApiResponse>;
+      const axiosError = error;
       const errorMessage = axiosError.response?.data.message;
       toast({
         title: "Unsuccessful",

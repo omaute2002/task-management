@@ -99,7 +99,7 @@ export default function Page() {
     return valid;
   };
 
-  async function handleUpdate(e: FormEvent) {
+  async function handleUpdate(e) {
     e.preventDefault();
     if (!validateForm()) {
       return;

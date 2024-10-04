@@ -1,6 +1,5 @@
-
 "use client";
-import { FormEvent, useState } from "react";
+import { useState, FormEvent } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -14,13 +13,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -33,7 +30,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Label } from "@/components/ui/label";
 import { useSession } from "@/context/SessionContext";
 import {
@@ -44,7 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Settings2 } from "lucide-react";
+import { Settings2, Loader2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -53,24 +49,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 import axios from "axios";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
-
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+const DataTable = ({ columns, data }) => {
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
   const table = useReactTable({
     data,
     columns,
@@ -90,15 +76,11 @@ export function DataTable<TData, TValue>({
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("To-Do");
   const [priority, setPriority] = useState("Low");
   const [dueDate, setDueDate] = useState("");
-
-
-  // Error state variables for basic validation
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -107,11 +89,7 @@ export function DataTable<TData, TValue>({
 
   const validateForm = () => {
     let valid = true;
-    const newErrors = {
-      title: "",
-      description: "",
-      dueDate: "",
-    };
+    const newErrors = { title: "", description: "", dueDate: "" };
 
     if (!title.trim()) {
       newErrors.title = "Title is required";
@@ -130,19 +108,13 @@ export function DataTable<TData, TValue>({
     return valid;
   };
 
-  // "Function" ADD Task
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    const taskFormData = {
-      title,
-      description,
-      status,
-      priority,
-      dueDate
-    }
-    console.log("Form data: ", taskFormData)
+
+    const taskFormData = { title, description, status, priority, dueDate };
     setIsSubmitting(true);
+
     try {
       const token = localStorage.getItem("authToken");
       if (!token) {
@@ -156,24 +128,14 @@ export function DataTable<TData, TValue>({
 
       const response = await axios.post(
         "/api/create-task",
+        taskFormData,
         {
-          title,
-          description,
-          status,
-          priority,
-          dueDate,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.data.success) {
-        toast({
-          title: "Task Added",
-        });
+        toast({ title: "Task Added" });
         location.reload();
       }
     } catch (error) {
@@ -185,47 +147,44 @@ export function DataTable<TData, TValue>({
       });
     }
     setIsSubmitting(false);
-  }
+  };
 
-  function handleKanban(){
-    router.replace('/kanban-view')
-  }
+  const handleKanban = () => {
+    router.replace("/kanban-view");
+  };
 
   return (
     <div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter tasks..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+          value={table.getColumn("title")?.getFilterValue() ?? ""}
+          onChange={(e) =>
+            table.getColumn("title")?.setFilterValue(e.target.value)
           }
           className="max-w-sm"
         />
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className="ml-4 hover:bg-black hover:text-white">Add Task</Button>
+            <Button variant="outline" className="ml-4 hover:bg-black hover:text-white">
+              Add Task
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px] bg-white">
-            <DialogHeader className="bg-white">
+            <DialogHeader>
               <DialogTitle>Add Task</DialogTitle>
               <DialogDescription>
-                Add new task. Dont forget to select the priority
+                Add new task. Don't forget to select the priority.
               </DialogDescription>
             </DialogHeader>
-            <form
-              action=""
-              className="space-y-4"
-              onSubmit={handleSubmit} 
-            >
-              <div className="grid bg-white gap-4 py-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="title" className="text-right">
                     Title
                   </Label>
                   <Input
                     id="title"
-                    defaultValue="task..."
                     className="col-span-3"
                     type="text"
                     onChange={(e) => setTitle(e.target.value)}
@@ -236,12 +195,11 @@ export function DataTable<TData, TValue>({
                   )}
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="username" className="text-right">
-                    description
+                  <Label htmlFor="description" className="text-right">
+                    Description
                   </Label>
                   <Input
                     id="description"
-                    defaultValue="describe your task"
                     className="col-span-3"
                     type="textarea"
                     value={description}
@@ -286,7 +244,7 @@ export function DataTable<TData, TValue>({
                   </Select>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="status" className="text-right">
+                  <Label htmlFor="dueDate" className="text-right">
                     Due Date
                   </Label>
                   <Input
@@ -296,7 +254,6 @@ export function DataTable<TData, TValue>({
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
                   />
-
                   {errors.dueDate && (
                     <p className="text-red-500 text-sm">{errors.dueDate}</p>
                   )}
@@ -317,7 +274,11 @@ export function DataTable<TData, TValue>({
             </form>
           </DialogContent>
         </Dialog>
-        <Button variant="outline" className="ml-4 hover:bg-black hover:text-white" onClick={handleKanban}>
+        <Button
+          variant="outline"
+          className="ml-4 hover:bg-black hover:text-white"
+          onClick={handleKanban}
+        >
           Kanban View
         </Button>
         <DropdownMenu>
@@ -328,23 +289,18 @@ export function DataTable<TData, TValue>({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
+            {table.getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -353,44 +309,30 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -399,23 +341,15 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
+        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
           Previous
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
+        <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
           Next
         </Button>
       </div>
     </div>
   );
-}
+};
+
+export default DataTable;

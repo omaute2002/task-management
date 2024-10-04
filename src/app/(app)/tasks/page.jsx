@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Task, columns } from "./columns";
-import { DataTable } from "./data-table";
+import  columns  from "./columns.jsx";
+import  DataTable  from "./data-table.jsx";
 import axios from "axios";
 import { useSession } from "@/context/SessionContext";
 import Navbar from "@/components/custom-components/Navbar";
