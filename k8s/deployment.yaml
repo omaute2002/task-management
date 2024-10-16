@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: task-management
-        image: omaute/task-management:v1
+        image: 727646487669.dkr.ecr.us-west-2.amazonaws.com/task-management:latest
         ports: 
         - containerPort: 3000
         resources:
